@@ -115,8 +115,9 @@ if (!class_exists('Crouton')) {
 
 			//auto-loads all .php files in these directories.
         	$includes = array( 
-        		'Classes',                
-                'Classes/Wrappers'      //facades
+        		'Classes',     
+                'Classes/Wrappers',      //facades
+                'Classes/Admin'
 			);
 
 			foreach( $includes as $inc ){

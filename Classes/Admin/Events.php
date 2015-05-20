@@ -60,7 +60,7 @@
 				$url = Url::plugin( 'crouton', true ).'Assets';
 				wp_enqueue_script( 
 					'crouton_admin', 
-					$url.'/js/Admin.js', 
+					$url.'/js/Admin.js'
 				);
 
 				
