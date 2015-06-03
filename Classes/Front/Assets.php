@@ -3,7 +3,7 @@
 	namespace Crouton\Front;
 
 	use Cuisine\Utilities\Url;
-	use Cuisine\Wrappers\Scripts;
+	use Cuisine\Wrappers\Script;
 	use Cuisine\Wrappers\Sass;
 	use Crouton\Wrappers\StaticInstance;
 
@@ -31,7 +31,7 @@
 				$url = Url::plugin( 'crouton', true ).'Assets/js/';
 
 				// id - url (without .js) - autoload
-				Scripts::register( 'crouton-script', $url.'Frontend', false );
+				Script::register( 'crouton-script', $url.'Frontend', false );
 
 				//sass files loaded in the front-end:
 				$url = 'crouton/Assets/sass/';
