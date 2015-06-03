@@ -57,7 +57,45 @@ if (!class_exists('CroutonIgniter')) {
 
             // Load plugin.
             $this->load();
+        
         }
+
+
+        /**
+         * Load the framework classes.
+         *
+         * @return void
+         */
+        private function load(){
+
+            //auto-loads all .php files in these directories.
+            $includes = array( 
+                'Classes/Wrappers',      //facades
+                'Classes/Admin',
+                'Classes/Front'
+            );
+
+            foreach( $includes as $inc ){
+                
+                $root = static::getPluginPath();
+                $files = glob( $root.$inc.'/*.php' );
+
+                foreach ( $files as $file ){
+
+                    require_once( $file );
+
+                }
+            }
+
+            //give off the loaded hook
+            do_action( 'crouton_loaded' );
+
+        }
+
+        /*=============================================================*/
+        /**             Getters & Setters                              */
+        /*=============================================================*/
+
 
         /**
          * Init the plugin classes
@@ -109,36 +147,7 @@ if (!class_exists('CroutonIgniter')) {
             return 'plugins';
         }
 
-        /**
-         * Load the framework classes.
-         *
-         * @return void
-         */
-        private function load(){
-
-			//auto-loads all .php files in these directories.
-        	$includes = array( 
-                'Classes/Wrappers',      //facades
-                'Classes/Admin',
-                'Classes/Front'
-			);
-
-			foreach( $includes as $inc ){
-				
-				$root = static::getPluginPath();
-				$files = glob( $root.$inc.'/*.php' );
-
-				foreach ( $files as $file ){
-
-					require_once( $file );
-
-        	    }
-        	}
-
-            //give off the loaded hook
-            do_action( 'crouton_loaded' );
-
-        }
+        
 
         /**
          * Get the plugin path
