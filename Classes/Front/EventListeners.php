@@ -3,15 +3,10 @@
 	namespace Crouton\Frontend;
 
 	use \Cuisine\Utilities\Url;
+	use \Crouton\Wrappers\StaticInstance;
 
-	class Events{
+	class EventListeners extends StaticInstance{
 
-		/**
-		 * Frontend Events bootstrap instance.
-		 *
-		 * @var \Cuisine
-		 */
-		private static $instance = null;
 
 
 		/**
@@ -21,19 +16,6 @@
 
 			$this->enqueues();
 
-		}
-
-		/**
-		 * Init the Frontend Event class
-		 *
-		 * @return \Crouton
-		 */
-		public static function getInstance(){
-
-		    if ( is_null( static::$instance ) ){
-		        static::$instance = new static();
-		    }
-		    return static::$instance;
 		}
 
 
@@ -60,4 +42,4 @@
 
 	}
 
-	\Crouton\Frontend\Events::getInstance();
+	\Crouton\Frontend\EventListeners::getInstance();

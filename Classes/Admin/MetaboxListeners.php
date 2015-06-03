@@ -4,15 +4,9 @@
 
 	use \Cuisine\Wrappers\Metabox;
 	use \Cuisine\Wrappers\Field;
+	use \Crouton\Wrappers\StaticInstance;
 
-	class Metaboxes{
-
-		/**
-		 * Bootstrap the Backend events instance .
-		 *
-		 * @var \Cuisine
-		 */
-		private static $instance = null;
+	class MetaboxListeners extends StaticInstance{
 
 
 		/**
@@ -20,21 +14,8 @@
 		 */
 		function __construct(){
 
-			$this->initBoxes();
+			$this->metaboxes();
 
-		}
-
-		/**
-		 * Init the instance:
-		 *
-		 * @return \Crouton
-		 */
-		public static function getInstance(){
-
-		    if ( is_null( static::$instance ) ){
-		        static::$instance = new static();
-		    }
-		    return static::$instance;
 		}
 
 
@@ -43,7 +24,7 @@
 		 * 
 		 * @return void
 		 */
-		private function initBoxes(){
+		private function metaboxes(){
 
 			$fields = $this->getFields();
 			Metabox::make( 'A Metabox', 'post' )->set( $fields );
@@ -58,6 +39,7 @@
 		private function getFields(){
 
 			return array(
+
 				Field::media( 
 					'images', 
 					'Afbeeldingen',
@@ -65,7 +47,8 @@
 						'label' 				=> 'top',
 						'defaultValue'			=> array(),
 					)
-				),
+				)
+				
 			);
 
 		}
@@ -75,4 +58,4 @@
 	}
 
 	if( is_admin() )
-		\Crouton\Admin\Metaboxes::getInstance();
+		\Crouton\Admin\MetaboxListeners::getInstance();

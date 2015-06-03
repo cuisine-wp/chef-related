@@ -117,7 +117,8 @@ if (!class_exists('Crouton')) {
         	$includes = array( 
         		'Classes',     
                 'Classes/Wrappers',      //facades
-                'Classes/Admin'
+                'Classes/Admin',
+                'Classes/Front'
 			);
 
 			foreach( $includes as $inc ){
@@ -161,7 +162,7 @@ if (!class_exists('Crouton')) {
  */
 add_action('cuisine_loaded', function(){
 
-	$GLOBALS['Crouton'] = Crouton::getInstance();
+	Crouton::getInstance();
 
 });
 
