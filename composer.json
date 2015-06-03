@@ -1,7 +1,7 @@
 {
-  "name": "chefduweb/cuisine",
-  "description": "A modern WordPress framework by Chef du Web",
-  "keywords": ["wordpress", "plugin", "framework"],
+  "name": "chefduweb/crouton",
+  "description": "Crouton is a starter-plugin vor Cuisine",
+  "keywords": ["wordpress", "plugin", "canvas", "starter"],
   "homepage": "http://www.chefduweb.nl/cuisine",
   "license": "GPLv3",
   "authors": [
@@ -18,6 +18,7 @@
   ],
   "type": "wordpress-plugin",
   "require": {
-    "php": ">=5.3.2"
+    "php": ">=5.3.2",
+    "chefduweb/cuisine": "dev-master"
   }
 }

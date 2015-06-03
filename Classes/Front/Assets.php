@@ -18,7 +18,6 @@
 
 		}
 
-
 		/**
 		 * Enqueue scripts & Styles
 		 * 
@@ -28,13 +27,17 @@
 
 			add_action( 'init', function(){
 
-				//scripts:
+				//javascript files loaded in the frond-end:
 				$url = Url::plugin( 'crouton', true ).'Assets/js/';
-				//Scripts::register( 'crouton-script', $url.'Frontend.js', false );
 
-				//sass:
+				// id - url (without .js) - autoload
+				Scripts::register( 'crouton-script', $url.'Frontend', false );
+
+				//sass files loaded in the front-end:
 				$url = 'crouton/Assets/sass/';
-				//Sass::register( 'template', $url.'_template.scss', false );
+				
+				// id - url (without .scss ) - force-overwrite
+				Sass::register( 'template', $url.'_template', false );
 			
 			});
 		}

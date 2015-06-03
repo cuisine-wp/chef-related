@@ -23,6 +23,13 @@
 		 */
 		private function listen(){
 
+
+			add_action( 'admin_init', function(){
+				
+				//do something
+
+			});
+
 		}
 
 

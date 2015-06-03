@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Crouton
  * Plugin URI: http://chefduweb.nl/cuisine
- * Description: Starting canvas for WordPress plugins
+ * Description: Starting canvas for Cuisine plugins
  * Version: 1.2
  * Author: Luc Princen
  * Author URI: http://www.chefduweb.nl/
@@ -13,6 +13,9 @@
  * @author Chef du Web
  */
 
+//change this namespace
+namespace Crouton;
+
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // The directory separator.
@@ -22,14 +25,14 @@ defined('DS') ? DS : define('DS', DIRECTORY_SEPARATOR);
 /**
  * Main class that bootstraps the plugin.
  */
-if (!class_exists('Crouton')) {
+if (!class_exists('CroutonIgniter')) {
 
-    class Crouton {
+    class CroutonIgniter {
     
         /**
          * Plugin bootstrap instance.
          *
-         * @var \Crouton
+         * @var \Crouton\CroutonIgniter
          */
         private static $instance = null;
 
@@ -59,7 +62,7 @@ if (!class_exists('Crouton')) {
         /**
          * Init the plugin classes
          *
-         * @return \Crouton
+         * @return \Crouton\CroutonIgniter
          */
         public static function getInstance(){
 
@@ -115,7 +118,6 @@ if (!class_exists('Crouton')) {
 
 			//auto-loads all .php files in these directories.
         	$includes = array( 
-        		'Classes',     
                 'Classes/Wrappers',      //facades
                 'Classes/Admin',
                 'Classes/Front'
@@ -138,7 +140,11 @@ if (!class_exists('Crouton')) {
 
         }
 
-
+        /**
+         * Get the plugin path
+         * 
+         * @return string
+         */
         public static function getPluginPath(){
         	return __DIR__.DS;
         }
@@ -162,7 +168,7 @@ if (!class_exists('Crouton')) {
  */
 add_action('cuisine_loaded', function(){
 
-	Crouton::getInstance();
+	\Crouton\CroutonIgniter::getInstance();
 
 });
 

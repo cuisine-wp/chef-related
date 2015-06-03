@@ -10,7 +10,7 @@
 
 
 		/**
-		 * Init admin events & vars
+		 * Init admin metaboxes
 		 */
 		function __construct(){
 
@@ -41,11 +41,11 @@
 			return array(
 
 				Field::media( 
-					'images', 
-					'Afbeeldingen',
+					'images', 					//id
+					'Afbeeldingen',				//Label
 					array(
-						'label' 				=> 'top',
-						'defaultValue'			=> array(),
+						'label' 				=> 'top',		//display Label
+						'defaultValue'			=> array()
 					)
 				)
 				

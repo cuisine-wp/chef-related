@@ -8,32 +8,26 @@
 	class EventListeners extends StaticInstance{
 
 
-
 		/**
 		 * Init events & vars
 		 */
 		function __construct(){
 
-			$this->enqueues();
+			$this->listen();
 
 		}
 
 
 		/**
-		 * Enqueue scripts & Styles
+		 * Listen to front-end events
 		 * 
 		 * @return void
 		 */
-		private function enqueues(){
+		private function listen(){
 
-			add_action( 'wp_header', function(){
+			add_action( 'init', function(){
 
-				$url = Url::plugin( 'crouton', true ).'Assets';
-
-				wp_enqueue_script( 
-					'test_script', 
-					$url.'/js/Frontend.js'
-				);
+				//do something
 
 			});
 		}

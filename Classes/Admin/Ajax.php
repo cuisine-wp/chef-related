@@ -8,7 +8,7 @@
 	class Ajax extends AjaxInstance{
 
 		/**
-		 * Init admin events
+		 * Init admin ajax events:
 		 */
 		function __construct(){
 
@@ -17,7 +17,7 @@
 		}
 
 		/**
-		 * All ajax events for sections on the backend
+		 * All backend-ajax events for this plugin
 		 * 
 		 * @return string, echoed
 		 */

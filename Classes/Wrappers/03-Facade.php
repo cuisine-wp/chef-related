@@ -52,9 +52,11 @@
     
     
         private static function getFacadeName( $name ) {
+
             $aliases = array(
-                'field'             => 'Crouton\Fields\FieldBuilder',
-    //            'loop'              => 'Cuisine\View\Loop',
+
+                'example'             => 'Crouton\Examples\Example',
+
             );
     
             return $aliases[ $name ];
