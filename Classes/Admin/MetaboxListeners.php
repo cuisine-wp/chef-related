@@ -1,10 +1,10 @@
 <?php
 
-	namespace Crouton\Admin;
+	namespace ChefRelated\Admin;
 
 	use \Cuisine\Wrappers\Metabox;
 	use \Cuisine\Wrappers\Field;
-	use \Crouton\Wrappers\StaticInstance;
+	use \ChefRelated\Wrappers\StaticInstance;
 
 	class MetaboxListeners extends StaticInstance{
 
@@ -20,15 +20,18 @@
 
 
 		/**
-		 * Creates the metaboxes for this plugin
+		 * Creates the metabox for this plugin
 		 * 
 		 * @return void
 		 */
 		private function metaboxes(){
 
-			$fields = $this->getFields();
-			Metabox::make( 'A Metabox', 'post' )->set( $fields );
+			add_action( 'admin_init', function(){
 
+				$fields = $this->getFields();
+				Metabox::make( 'Gerelateerd', 'post' )->set( $fields );
+
+			});
 		}
 
 		/**
@@ -40,9 +43,9 @@
 
 			return array(
 
-				Field::media( 
-					'images', 					//id
-					'Afbeeldingen',				//Label
+				Field::postsearch( 
+					'posts', 					//id
+					'Berichten',				//Label
 					array(
 						'label' 				=> 'top',		//display Label
 						'defaultValue'			=> array()
@@ -58,4 +61,4 @@
 	}
 
 	if( is_admin() )
-		\Crouton\Admin\MetaboxListeners::getInstance();
+		\ChefRelated\Admin\MetaboxListeners::getInstance();

@@ -1,7 +1,9 @@
 <?php
 
-	namespace Crouton\Wrappers;
+	namespace ChefRelated\Wrappers;
 
+	use \stdClass;
+	
 	class AjaxInstance extends StaticInstance{
 
 		/**

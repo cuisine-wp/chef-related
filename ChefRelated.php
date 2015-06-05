@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Crouton
+ * Plugin Name: Chef Related
  * Plugin URI: http://chefduweb.nl/cuisine
- * Description: Starting canvas for Cuisine plugins
+ * Description: Adds related posts
  * Version: 1.2
  * Author: Luc Princen
  * Author URI: http://www.chefduweb.nl/
@@ -14,7 +14,7 @@
  */
 
 //change this namespace
-namespace Crouton;
+namespace ChefRelated;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -25,14 +25,14 @@ defined('DS') ? DS : define('DS', DIRECTORY_SEPARATOR);
 /**
  * Main class that bootstraps the plugin.
  */
-if (!class_exists('CroutonIgniter')) {
+if (!class_exists('ChefRelatedIgniter')) {
 
-    class CroutonIgniter {
+    class ChefRelatedIgniter {
     
         /**
          * Plugin bootstrap instance.
          *
-         * @var \Crouton\CroutonIgniter
+         * @var \ChefRelated\ChefRelatedIgniter
          */
         private static $instance = null;
 
@@ -41,7 +41,7 @@ if (!class_exists('CroutonIgniter')) {
          *
          * @var float
          */
-        const VERSION = '1.1';
+        const VERSION = '1.0';
 
 
         /**
@@ -100,7 +100,7 @@ if (!class_exists('CroutonIgniter')) {
         /**
          * Init the plugin classes
          *
-         * @return \Crouton\CroutonIgniter
+         * @return \ChefRelated\ChefRelatedIgniter
          */
         public static function getInstance(){
 
@@ -177,7 +177,7 @@ if (!class_exists('CroutonIgniter')) {
  */
 add_action('cuisine_loaded', function(){
 
-	\Crouton\CroutonIgniter::getInstance();
+	\ChefRelated\ChefRelatedIgniter::getInstance();
 
 });
 

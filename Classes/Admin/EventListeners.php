@@ -1,9 +1,9 @@
 <?php
 
-	namespace Crouton\Admin;
+	namespace ChefRelated\Admin;
 
 	use \Cuisine\Utilities\Url;
-	use \Crouton\Wrappers\StaticInstance;
+	use \ChefRelated\Wrappers\StaticInstance;
 
 	class EventListeners extends StaticInstance{
 
@@ -24,9 +24,20 @@
 		private function listen(){
 
 
-			add_action( 'admin_init', function(){
+			add_action( 'init', function(){
 				
-				//do something
+				//register the custom field type "Post searcher"
+				add_filter( 'cuisine_field_types', function( $arr ){
+
+					$arr['postsearch'] = array(
+
+						'name'		=> 'Post Zoeker',
+						'class'		=> 'ChefRelated\\Admin\\PostSearchField'
+					);
+
+					return $arr;
+
+				});
 
 			});
 
@@ -37,4 +48,4 @@
 	}
 
 	if( is_admin() )
-		\Crouton\Admin\EventListeners::getInstance();
+		\ChefRelated\Admin\EventListeners::getInstance();

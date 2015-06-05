@@ -1,6 +1,6 @@
 <?php
 
-    namespace Crouton\Wrappers;
+    namespace ChefRelated\Wrappers;
     
     abstract class Wrapper {
     
@@ -55,7 +55,7 @@
 
             $aliases = array(
 
-                'example'             => 'Crouton\Examples\Example',
+//                'example'             => 'ChefRelated\Examples\Example',
 
             );
     

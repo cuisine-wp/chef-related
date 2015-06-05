@@ -1,9 +1,10 @@
 <?php
 
-	namespace Crouton\Admin;
+	namespace ChefRelated\Admin;
 
-	use \stdClass;
-	use \Crouton\Wrappers\AjaxInstance;
+	use \Cuisine\Wrappers\PostType;
+	use \ChefRelated\Wrappers\AjaxInstance;
+	use \WP_Query;
 
 	class Ajax extends AjaxInstance{
 
@@ -24,18 +25,22 @@
 		private function listen(){
 
 
-			//boilerplate:
-			add_action( 'wp_ajax_actionName', function(){
+			add_action( 'wp_ajax_fetchPostList', function(){
 
-				$this->setPostGlobal();
+				$post_types = PostType::get();
+
+				$query = new WP_Query( array( 'post_types' => $post_types, 'posts_per_page' => -1 ) );
+
+				if( $query->have_posts() )
+					echo json_encode( $query->posts );
 
 
 				die();
-
 			});
+
 		}
 	}
 
 
 	if( is_admin() )
-		\Crouton\Admin\Ajax::getInstance();
+		\ChefRelated\Admin\Ajax::getInstance();
