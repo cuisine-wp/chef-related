@@ -28,7 +28,7 @@
 		public function build(){
 
 		    $posts = $this->getValue();
-		    $html = '<div class="post-search-field" data-name="'.$this->name.'">';
+		    $html = '<div class="post-search-field" data-highest-id="'.$this->getHighestItemId().'">';
 
 		    $html .= '<div class="not-selected-wrapper">';
 		    	$html .= '<div class="search-bar">';
@@ -71,21 +71,59 @@
 		public function makeItem( $item ){
 
 			$prefix = '<input type="hidden" class="multi" name="';
-			$prefix .= $this->name.'['.$p['id'].']';
+			$prefix .= $this->name.'['.$item['id'].']';
 
+			$html = '';
 			$html .= '<li>';
-				$html .= $p['title'];
-				$html .= '<span class="type">'.$p['type'].'</span>';
+				$html .= $item['title'];
+				$html .= '<span class="type">'.$item['type'].'</span>';
 
-				$html .= $prefix.'[id]" value="'.$p['id'].'">';
-				$html .= $prefix.'[title]" value="'.$p['title'].'">';
-				$html .= $prefix.'[type]" value="'.$p['type'].'">';
-				$html .= $prefix.'[position]" value="'.$p['position'].'">';
+				$html .= $prefix.'[id]" value="'.$item['id'].'">';
+				$html .= $prefix.'[title]" value="'.$item['title'].'">';
+				$html .= $prefix.'[type]" value="'.$item['type'].'">';
+				$html .= $prefix.'[position]" value="'.$item['position'].'" id="position">';
 
 			$html .= '</li>';
 			
 			return $html;
 		}
+
+
+
+		/**
+		 * Return the template, for Javascript
+		 * 
+		 * @return String
+		 */
+		public function renderTemplate(){
+
+		    //make a clonable item, for javascript:
+		    $html = '<script type="text/template" id="post_search_template">';
+		        $html .= $this->makeItem( array( 
+		            'id' => '<%= item_id %>',
+		            'title' => '<%= title %>', 
+		            'type' => '<%= type %>',
+		            'position' => '<%= position %>',
+		        ) );
+		    $html .= '</script>';
+
+		    return $html;
+		}
+
+
+
+		/**
+		 * Get the highest item ID available
+		 * 
+		 * @return int
+		 */
+		private function getHighestItemId(){
+
+		    $posts = $this->getValue();
+		    return count( $posts );
+
+		}
+
 
 
 	}

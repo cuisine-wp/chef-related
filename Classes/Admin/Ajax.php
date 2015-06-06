@@ -27,14 +27,25 @@
 
 			add_action( 'wp_ajax_fetchPostList', function(){
 
-				$post_types = PostType::get();
+				//query caching
+				global $postList;
 
-				$query = new WP_Query( array( 'post_types' => $post_types, 'posts_per_page' => -1 ) );
+				if( !isset( $postList ) ){
+					
+					$post_types = PostType::get();
+					$query = new WP_Query( array( 'post_types' => $post_types, 'posts_per_page' => 	-1 ) );
+	
+					$GLOBALS['postList'] = $query->posts;
+					$return = $query->posts;				
+				
+				}else{
+					$return = $postList;
+				
+				}
 
-				if( $query->have_posts() )
-					echo json_encode( $query->posts );
 
-
+				//return the post-list
+				echo json_encode( $return );
 				die();
 			});
 

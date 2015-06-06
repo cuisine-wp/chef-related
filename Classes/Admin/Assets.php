@@ -30,7 +30,7 @@
 				$url = Url::plugin( 'chef-related', true ).'Assets';
 
 				//enqueue a script
-				wp_enqueue_script( 'chef_related', $url.'/js/Admin.js' );
+				//wp_enqueue_script( 'chef_related', $url.'/js/Admin.js' );
 				wp_enqueue_script( 'chef_related_post_search', $url.'/js/PostSearch.js' );
 
 				//enqueue a stylesheet:
