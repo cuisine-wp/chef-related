@@ -1,1 +1,81 @@
 /** Frontend CSS goes in the /sass/ folder. */
+
+.search-bar{
+	width:100%;
+	input{
+		box-sizing:border-box;
+		width:100%;
+		padding:5px 10px;
+
+	}
+}
+
+
+.not-selected, .is-selected{
+	box-sizing:border-box;
+	background:#f9f9f9;
+	height:300px;
+	display:block;
+	box-shadow:inset 0 0 10px rgba(0,0,0,.2);
+	width:47.5%;
+	float:left;
+	margin-top:30px;
+	padding:15px;
+	max-height:300px;
+	overflow-y:scroll;
+	overflow-x:hidden;
+
+
+	.records{
+		min-height:300px;
+	}
+
+	h3{
+		color:#00a0d2;
+		font-size:16px;
+		text-transform:uppercase;
+		width:100%;
+		text-align:center;
+	}
+
+	li{
+		display:block;
+		position:relative;
+		list-style:none;
+		padding:10px 16px;
+		background:#fff;
+		margin:0 0 5px 0;
+		box-shadow:1px 1px 3px rgba(0,0,0,.3), 0 0 10px rgba(0,0,0,.15);
+		border-radius:1px solid rgba(0,0,0,.1);
+		color:#444;
+
+		b{
+			max-width:80%;
+			overflow:hidden;
+			display:block;
+		
+		}
+
+
+		span{
+			position:absolute;
+			top:10px;
+			right:10px;
+			color:#ddd;
+		}
+
+		&:hover{
+			background:#00a0d2;
+			color:#fff;
+			cursor:pointer;
+		}
+	}
+
+	.records{
+		min-height:300px;
+	}
+}
+
+.not-selected{
+	margin-right:5%;
+}

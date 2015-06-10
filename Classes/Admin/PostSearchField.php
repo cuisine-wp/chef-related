@@ -36,14 +36,16 @@
 		    	$html .= '</div>';
 
 		    	$html .= '<div class="not-selected">';
+		    	$html .= '<h3>'.__( 'Niet geselecteerd', 'chefrelated').'</h3>';
+		    	$html .= '<ul class="not-selected-items records">';
 
 
-		    	$html .= '</div>';
+		    	$html .= '</ul></div>';
 
 		    $html .= '</div>';
-		    $html .= '<div class="selected-wrapper">';
-
-		    	$html .= '<ul class="selected-items">';
+		    $html .= '<div class="is-selected">';
+		    	$html .= '<h3>'.__( 'Geselecteerd', 'chefrelated').'</h3>';
+		    	$html .= '<ul class="selected-items records">';
 		    	$i = 0;
 
 		    	if( !empty( $posts ) ){
@@ -56,7 +58,7 @@
 
 		    	$html .= '</ul>';
 
-		    $html .= '</div>';
+		    $html .= '</div><div class="clear"></div>';
 		    $html .= '</div>';
 
 		    return $html;
@@ -75,7 +77,7 @@
 
 			$html = '';
 			$html .= '<li>';
-				$html .= $item['title'];
+				$html .= '<b>'.$item['title'].'</b>';
 				$html .= '<span class="type">'.$item['type'].'</span>';
 
 				$html .= $prefix.'[id]" value="'.$item['id'].'">';

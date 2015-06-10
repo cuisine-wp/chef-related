@@ -34,7 +34,7 @@
 				wp_enqueue_script( 'chef_related_post_search', $url.'/js/PostSearch.js' );
 
 				//enqueue a stylesheet:
-				wp_enqueue_style( 'related-style', $url, '/css/admin.css' );
+				wp_enqueue_style( 'related-style', $url.'/css/admin.css' );
 				
 			});
 		}
