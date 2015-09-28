@@ -55,7 +55,7 @@
 
             $aliases = array(
 
-//                'example'             => 'ChefRelated\Examples\Example',
+                'walker'             => 'ChefRelated\Front\Walker',
 
             );
     
