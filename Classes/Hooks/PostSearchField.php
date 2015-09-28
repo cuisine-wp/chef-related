@@ -28,6 +28,7 @@
 		public function build(){
 
 		    $posts = $this->getValue();
+
 		    $html = '<div class="post-search-field" data-highest-id="'.$this->getHighestItemId().'">';
 
 		    $html .= '<div class="not-selected-wrapper">';
@@ -37,6 +38,9 @@
 
 		    	$html .= '<div class="not-selected">';
 		    	$html .= '<h3>'.__( 'Niet geselecteerd', 'chefrelated').'</h3>';
+
+		    	$html .= '<span class="spinner"></span>';
+
 		    	$html .= '<ul class="not-selected-items records">';
 
 
@@ -51,7 +55,7 @@
 		    	if( !empty( $posts ) ){
 		    	foreach( $posts as $p ){
 
-		    		$this->makeItem( $p, $i );
+		    		$html .= $this->makeItem( $p, $i );
 
 		    		$i++;
 		    	}}
@@ -76,14 +80,14 @@
 			$prefix .= $this->name.'['.$item['id'].']';
 
 			$html = '';
-			$html .= '<li>';
+			$html .= '<li data-id="'.$item['id'].'">';
 				$html .= '<b>'.$item['title'].'</b>';
 				$html .= '<span class="type">'.$item['type'].'</span>';
 
-				$html .= $prefix.'[id]" value="'.$item['id'].'">';
-				$html .= $prefix.'[title]" value="'.$item['title'].'">';
-				$html .= $prefix.'[type]" value="'.$item['type'].'">';
-				$html .= $prefix.'[position]" value="'.$item['position'].'" id="position">';
+				$html .= $prefix.'[id]" value="'.$item['id'].'" disabled>';
+				$html .= $prefix.'[title]" value="'.$item['title'].'" disabled>';
+				$html .= $prefix.'[type]" value="'.$item['type'].'" disabled>';
+				$html .= $prefix.'[position]" value="'.$item['position'].'" id="position" disabled>';
 
 			$html .= '</li>';
 			

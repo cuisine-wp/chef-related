@@ -47,6 +47,7 @@
 				//return the post-list
 				echo json_encode( $return );
 				die();
+
 			});
 
 		}

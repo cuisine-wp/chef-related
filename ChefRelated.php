@@ -71,6 +71,7 @@ if (!class_exists('ChefRelatedIgniter')) {
             //auto-loads all .php files in these directories.
             $includes = array( 
                 'Classes/Wrappers',      //facades
+                'Classes/Hooks',
                 'Classes/Admin',
                 'Classes/Front'
             );
@@ -88,7 +89,7 @@ if (!class_exists('ChefRelatedIgniter')) {
             }
 
             //give off the loaded hook
-            do_action( 'crouton_loaded' );
+            do_action( 'chef_related_loaded' );
 
         }
 

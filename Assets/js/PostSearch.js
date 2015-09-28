@@ -6,6 +6,7 @@ var PostSearch = Backbone.View.extend({
 	posts: {},
 	filtered: {},
 	items: {},
+	selectedItems: {},
 
 	included: '',
 	excluded: '',
@@ -27,7 +28,7 @@ var PostSearch = Backbone.View.extend({
 		self.included = self.$el.find( '.selected-items' );
 		self.excluded = self.$el.find( '.not-selected' );
 
-		self.fetchPosts();
+		self.setSelected();
 
 		self.setEvents();
 		self.setItemPositions();
@@ -47,7 +48,18 @@ var PostSearch = Backbone.View.extend({
 			connectWith: '.records',
 			stop: function(e, ui){
 				
-				setItemPositions();
+				self.setItemPositions();
+
+				var _item = jQuery( ui.item[0] );
+
+				if( _item.parent().hasClass('selected-items') === true ){
+
+					_item.find('input').prop( 'disabled', false );
+
+				}else{
+					_item.find('input').prop( 'disabled', true );
+				}
+
 
 			}
 		}).disableSelection();
@@ -84,6 +96,7 @@ var PostSearch = Backbone.View.extend({
 
 		jQuery('.not-selected-items').html('');
 
+
 		for( var i = 0; i < self.filtered.length; i++ ){
 
 			var item = self.filtered[ i ];
@@ -96,13 +109,36 @@ var PostSearch = Backbone.View.extend({
 
 			}
 
-			template += _.template( html, datas );
+
+			if( self.selectedItems.indexOf( item.ID ) === -1 ){
+				template += _.template( html, datas );
+			}
 		}
 
+		jQuery( '.not-selected .spinner' ).remove();
 		jQuery('.not-selected-items').append( template );	
 
 		return false;
 
+	},
+
+
+
+	setSelected: function(){
+
+		var self = this;
+		self.selectedItems = new Array();
+
+		jQuery( '.selected-items li').each( function(){
+
+			jQuery( this ).find('input').prop( 'disabled', false );
+
+			var _id = jQuery( this ).data( 'id' );
+			self.selectedItems.push( _id );
+
+		});
+
+		self.fetchPosts();
 	},
 
 
@@ -159,11 +195,11 @@ var PostSearch = Backbone.View.extend({
 		};
 
 		jQuery.post( ajaxurl, data, function( response ){
-				
+
 			self.posts = JSON.parse( response );
 			self.filtered = self.posts;
 			self.renderList();
-			return response;	
+			return response;
 		});
 
 	}

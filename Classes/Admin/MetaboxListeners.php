@@ -44,8 +44,8 @@
 			return array(
 
 				Field::postsearch( 
-					'posts', 					//id
-					'Berichten',				//Label
+					'related', 					
+					__( 'Berichten', 'chef-related' ),
 					array(
 						'label' 				=> 'top',		//display Label
 						'defaultValue'			=> array()

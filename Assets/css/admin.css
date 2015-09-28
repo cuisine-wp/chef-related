@@ -22,6 +22,17 @@
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+.not-selected .spinner{
+  position:absolute;
+  top:50%;
+  left:25%;
+  margin:-20px 0 0 -10px;
+  display:block;
+  visibility:visible;
+  opacity:1;
+}
+
 .not-selected .records, .is-selected .records {
   min-height: 300px;
 }
