@@ -29,6 +29,18 @@ function get_related(){
 }
 
 /**
+ * Does this item have related items?
+ * 
+ * @return ChefRelated\Front\Walker
+ */
+function has_related(){
+
+	return Walker::getRelated();
+	
+}
+
+
+/**
  * Get a section from an external post
  * 
  * @param  int $post_id    

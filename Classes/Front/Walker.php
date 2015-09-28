@@ -48,8 +48,11 @@ class Walker {
 		$default = self::defaultTemplate();
 		$theme = 'blocks/';
 
+
+
 		ob_start();
-		if( $this->query->have_posts() ){
+		
+		if( $this->query && $this->query->have_posts() ){
 
 			while( $this->query->have_posts() ){
 
@@ -108,7 +111,10 @@ class Walker {
 	private function getQuery(){
 
 		$_related = self::getRelated();
-	
+		
+		if( !$_related )
+			return false;
+
 
 		//related items are set, we can go on:
 		$_related_ids = array_keys( Sort::pluck( $_related, 'id' ) );
