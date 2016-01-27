@@ -59,7 +59,9 @@ class Walker {
 				$this->query->the_post();
 				$post_type = get_post_type();
 
-				Template::element( $theme.$post_type, $default )->display();
+				$block_template = apply_filters('chef_related_block_template', $theme.$post_type);
+
+				Template::element( $block_template, $default )->display();
 
 			}
 		}
@@ -110,11 +112,33 @@ class Walker {
 	 */
 	private function getQuery(){
 
-		$_related = self::getRelated();
-		
-		if( !$_related )
-			return false;
+		// TODO: Change location of the default settings | get plugin settings
+		$settings = get_option( 'related-posts-settings', array(
+						
+			'only_if_no_related'	=> 'false',
+			'auto_fill_related'		=> 'true',
+			'number_of_posts'		=> 3,
+			'post_categories'		=> 'all'
+			
+		) );
 
+		$_related = self::getRelated();
+
+		// get the posts categories
+		$postCategories = $this->getPostCategories();
+		$numberOfPosts = $settings['number_of_posts'];
+		
+		if( !$_related ) {
+
+			if ( $settings['auto_fill_related'] == 'true' ) {
+
+				return $this->getCategoryRelatedPosts($numberOfPosts, $postCategories);
+
+			} else {
+				return false;
+			}
+
+		}
 
 		//related items are set, we can go on:
 		$_related_ids = array_keys( Sort::pluck( $_related, 'id' ) );
@@ -122,11 +146,80 @@ class Walker {
 		$args = array(
 
 			'post__in' => $_related_ids,
-			'posts_per_page' => count( $_related_ids )
+			'posts_per_page' => count( $_related_ids ),
+
 		);
 
-		return new WP_Query( $args );
+		$result = new WP_Query( $args );
 
+		if ( count( $_related ) < $settings['number_of_posts']  && ($settings['only_if_no_related'] == 'false') && ($settings['auto_fill_related'] == 'true') ) {
+	
+			$numberOfSupplements = $settings['number_of_posts'] - count( $_related );
+			$excluded_posts = array_merge( array( $this->postId ), $_related_ids );
+			
+			$result = $this->getSupplementPosts( $result, $postCategories, $numberOfSupplements, $excluded_posts );
+		}
+
+		return $result;
+
+	}
+
+	/**
+	 * @param  [array] Query result
+	 * @param  [string] categories 
+	 * @param  [int] number of posts to collect
+	 * @param  [array] post_ids to exclude
+	 * @return [array] Query results (merged)
+	 */
+	private function getSupplementPosts( $result, $postCategories, $numberOfSupplements, $excluded_posts ) {
+
+		$supplementResults = new WP_Query ( array (
+				'category_name' => $postCategories,
+				'posts_per_page' => $numberOfSupplements,
+				'post__not_in'=> $excluded_posts
+			));
+
+		if ( $supplementResults ) {
+			// start putting the contents in the new object
+			$result->posts = array_merge( $result->posts, $supplementResults->posts );
+			// we also need to set post count correctly so as to enable the looping
+			$result->post_count = count( $result->posts );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param  [int] number of posts to collect
+	 * @return [array] Query result
+	 */
+	private function getCategoryRelatedPosts($numberOfPosts, $postCategories) {
+		return new WP_Query( array( 
+				'category_name' => $postCategories,
+				'posts_per_page' => $numberOfPosts,
+				'post__not_in'=> array($this->postId)
+			));
+	}
+
+	
+	/**
+	 * @return [string] post categories separated bij comma
+	 */
+	private function getPostCategories() {
+
+		$post_categories = wp_get_post_categories( $this->postId );
+		$categoryString = '';
+
+		foreach($post_categories as $c){
+
+			$cat = get_category( $c );
+			$categoryString .= $cat->slug . ',';
+
+		}
+
+		$categoryString = rtrim($categoryString, ',');
+
+		return $categoryString;
 	}
 
 
