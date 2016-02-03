@@ -155,7 +155,9 @@ class Walker {
 			} else {
 
 				// related items are set, we can go on:
+
 				$_related_ids =  Sort::pluck( $_related, 'id' );
+
 
 				// set query args
 				$args = array(

@@ -45,11 +45,9 @@
 
 				if( !$tableExists )
 					DB::install();
-
 			});
 
 		}
-
 	}
 
 	if( is_admin() )
