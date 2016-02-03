@@ -27,13 +27,16 @@
 
 			add_action( 'wp_ajax_fetchPostList', function(){
 
+				$this->setPostGlobal();
+
 				//query caching
 				global $postList;
+				global $post;
 
 				if( !isset( $postList ) ){
 					
 					$post_types = PostType::get();
-					$query = new WP_Query( array( 'post_types' => $post_types, 'posts_per_page' => 	-1 ) );
+					$query = new WP_Query( array( 'post_types' => $post_types, 'posts_per_page' => 	-1 , 'post__not_in'=> array($post->ID) ) );
 	
 					$GLOBALS['postList'] = $query->posts;
 					$return = $query->posts;				

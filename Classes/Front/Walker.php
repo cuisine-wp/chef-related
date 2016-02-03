@@ -4,6 +4,10 @@ namespace ChefRelated\Front;
 use Cuisine\Wrappers\Template;
 use Cuisine\Utilities\Sort;
 use Cuisine\Utilities\Url;
+use ChefRelated\Front\Settings;
+use Cuisine\Utilities\Logger;
+use ChefRelated\Database\DB;
+use Exception;
 use WP_Query;
 
 /**
@@ -18,12 +22,16 @@ class Walker {
 
 	var $query;
 
+	var $bidirectional;
+
 	/**
 	 * Set the postId for this Walker
 	 */
 	function __construct(){
 
 		global $post;
+
+		$this->bidirectional = (Settings::get( 'autoRelateBidirectional' ) == 'true' );
 
 		if( !isset( $post ) )
 			return false;
@@ -59,6 +67,7 @@ class Walker {
 				$this->query->the_post();
 				$post_type = get_post_type();
 
+				// filter for setting custom templates for related content
 				$block_template = apply_filters('chef_related_block_template', $theme.$post_type);
 
 				Template::element( $block_template, $default )->display();
@@ -93,16 +102,26 @@ class Walker {
 	 */
 	public function getRelated(){
 
-
-		$_related = get_post_meta( $this->postId, 'related', true );
-
+		$_related = array();
+		$relatedPosts = DB::get( $this->postId ,$this->bidirectional );
+		
+        foreach ($values as $relatedPost) {
+    		if ( $this->bidirectional ) {
+    			if ( $relatedPost->related_post_id == $this->post_id )
+    				array_push($_related, unserialize($relatedPost->post_data));	
+    		}
+    		if ( $relatedPost->post_id == $this->post_id )
+    			array_push($_related, unserialize($relatedPost->related_post_data));	
+    		
+    	}
 		//no related items set:
+		//$_related = get_post_meta( $this->postId, 'related', true );
 		if( !$_related )
 			return false;
-
-
+		//cuisine_dump($_related);
 		return $_related;
 	}
+
 
 
 	/**
@@ -112,76 +131,78 @@ class Walker {
 	 */
 	private function getQuery(){
 
-		// TODO: Change location of the default settings | get plugin settings
-		$settings = get_option( 'related-posts-settings', array(
-						
-			'only_if_no_related'	=> 'false',
-			'auto_fill_related'		=> 'true',
-			'number_of_posts'		=> 3,
-			'post_categories'		=> 'all'
+		try {
+
+			// log the settings
+			Logger::message( Settings::toString() );
+
+			// get the related posts
+			$_related = self::getRelated();
 			
-		) );
+			// if no related, check for supplement settings or return false
+			if( !$_related ) {
 
-		$_related = self::getRelated();
+				if ( Settings::get( 'autoSupplementRelated' ) == 'true' ) {
 
-		// get the posts categories
-		$postCategories = wp_get_post_categories( $this->postId );
-		$numberOfPosts = $settings['number_of_posts'];
-		
-		if( !$_related ) {
+					return $this->getRelatedPosts( array( $this->postId ), Settings::get( 'numberOfPosts' ) );
 
-			if ( $settings['auto_fill_related'] == 'true' ) {
+				} else {
 
-				return $this->getCategoryRelatedPosts($numberOfPosts, $postCategories);
+					return false;
+
+				}
 
 			} else {
-				return false;
-			}
 
-		}else{
+				// related items are set, we can go on:
+				$_related_ids =  Sort::pluck( $_related, 'id' );
 
-			//related items are set, we can go on:
-			$_related_ids = array_keys( Sort::pluck( $_related, 'id' ) );
-	
-			$args = array(
-	
-				'post__in' => $_related_ids,
-				'posts_per_page' => count( $_related_ids ),
-	
-			);
-	
-			$result = new WP_Query( $args );
-	
-			if ( count( $_related ) < $settings['number_of_posts']  && ($settings['	only_if_no_related'] == 'false') && ($settings['auto_fill_related'] == 'true') ) {
+				// set query args
+				$args = array(
+		
+					'post__in' => $_related_ids,
+					'posts_per_page' => count( $_related_ids ),
+		
+				);
+		
+				// get the query result
+				$result = new WP_Query( $args );
+		
+				// check if supplement is required and desired
+				if ( ( count( $_related ) < Settings::get( 'numberOfPosts' ) )  && ( Settings::get( 'autoSupplementRelated' ) == 'true' ) && ( Settings::get( 'onlyIfNoRelatedFound' ) == 'false' ) ) {
+					
+					// set the posts which should be excluded
+					$excluded_posts = array_merge( array( $this->postId ), $_related_ids );
+					// get the supplement posts from the database and merge with the already aquired result
+					$result = $this->getSupplementPosts( $result, $excluded_posts );
+
+				}
+		
 				
-				$numberOfSupplements = $settings['number_of_posts'] - count( $_related );
-				$excluded_posts = array_merge( array( $this->postId ), $_related_ids );
-				
-				$result = $this->getSupplementPosts( $result, $postCategories, $numberOfSupplements	, $excluded_posts );
-			}
-	
-	
-			return $result;
+				return $result;
 
+			}
+		} catch( Exception $ex) {
+			Logger::error( $ex->getMessage() );
 		}
 
 	}
 
+
+
 	/**
-	 * @param  [array] Query result
-	 * @param  [string] categories 
-	 * @param  [int] number of posts to collect
+	 * @param  [array] Query result, passed so the supplement posts can be merged
 	 * @param  [array] post_ids to exclude
 	 * @return [array] Query results (merged)
 	 */
-	private function getSupplementPosts( $result, $postCategories, $numberOfSupplements, $excluded_posts ) {
+	private function getSupplementPosts( $result, $excluded_posts ) {
 
-		$supplementResults = new WP_Query ( array (
-			'category__in' => $postCategories,
-			'posts_per_page' => $numberOfSupplements,
-			'post__not_in'=> $excluded_posts
-		));
+		// check how many posts should be supplemented
+		$numberOfSupplements = Settings::get( 'numberOfPosts' ) - $result->post_count;
 
+		$supplementResults = $this->getRelatedPosts( $excluded_posts, $numberOfSupplements );
+
+		// merge supplement
 		if ( $supplementResults->have_posts() ) {
 			// start putting the contents in the new object
 			$result->posts = array_merge( $result->posts, $supplementResults->posts );
@@ -192,19 +213,89 @@ class Walker {
 		return $result;
 	}
 
-	/**
-	 * @param  [int] number of posts to collect
-	 * @return [array] Query result
-	 */
-	private function getCategoryRelatedPosts($numberOfPosts, $postCategories) {
-		return new WP_Query( array( 
-				'category__in' => $postCategories,
-				'posts_per_page' => $numberOfPosts,
-				'post__not_in'=> array($this->postId)
-			));
-	}
-
 	
 
+	/**
+	 * Gets all related posts based on taxonomies and given params
+	 * @param  [(int)array()] $excluded_posts post id's you want to exclude from collection
+	 * @param  [int] $numberOfPosts  number of posts to collect
+	 * @return [array] Query result
+	 */
+	private function getRelatedPosts( $excluded_posts, $numberOfPosts ) {
+
+		// get the terms query
+		$taxQuery = $this->getTaxQuery();
+
+		// get posts with same category
+		return new WP_Query( array( 
+			'posts_per_page' => $numberOfPosts,
+			'post__not_in'=> $excluded_posts,
+			'tax_query' => $taxQuery
+		));
+	}
+
+
+
+	/**
+	 * Gets the taonomy query based on tags, categories and taxonomies of the current post
+	 * @return [array] the taxquery to add to WP_Query
+	 */
+	private function getTaxQuery() {
+
+		// get the post taxonomies
+		$taxonomies = get_post_taxonomies( $this->postId );
+
+		// if no taxonomies found
+		if( empty($taxonomies) ) {
+			Logger::message( 'no taxonomies found for relating posts' );
+			return array();
+		} else {
+
+			// get all the post terms with the used taxonomies
+			$postTerms = wp_get_post_terms( $this->postId, $taxonomies );
+
+			// if no postterms found
+			if( empty($postTerms) ) {
+				Logger::message( 'no terms found for relating posts' );
+				return array();
+			} else {
+			
+				// create the taxquery args
+				$taxQueries = array( 'relation' => 'OR' );
+
+				foreach ( $taxonomies as $taxonomy ) {
+					
+					// add termIds to array
+					$termIds = array();
+					foreach ( $postTerms as $term ) {
+						
+						if( $term->taxonomy == $taxonomy ) 
+							array_push( $termIds, $term->term_id );
+
+					}
+
+					// add a new query arg array
+					if( !empty( $termIds ) ) {
+						$taxQuery = array(
+							'taxonomy' => $taxonomy,
+							'field' => 'id',
+							'terms' => $termIds,
+							'operator' => 'IN'
+						);
+
+						array_push( $taxQueries, $taxQuery );
+					}
+
+				}
+
+				// return complete taxQuery
+				return array( array( 
+					'relation' => 'AND',
+					$taxQueries
+				));
+			}
+		}
+
+	}
 
 }

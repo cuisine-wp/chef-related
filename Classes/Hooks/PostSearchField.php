@@ -3,10 +3,22 @@
 	namespace ChefRelated\Admin;
 
 	use Cuisine\Fields\DefaultField;
+	use Cuisine\Utilities\Session;
+	use ChefRelated\Database\DB;
+	use \ChefRelated\Front\Settings;
 
 	class PostSearchField extends DefaultField{
 
 
+
+		/**
+		 * The current Post ID
+		 * 
+		 * @var integer
+		 */
+		var $post_id = 0;
+
+		var $bidirectional = false;
 
 		/**
 		 * Method to override to define the input type
@@ -21,6 +33,20 @@
 
 
 		/**
+		* Define a core Field.
+		*
+		* @param array $properties The text field properties.
+		*/
+		public function __construct( $name, $label = '', $props = array() ){
+
+			 $this->bidirectional = (Settings::get( 'autoRelateBidirectional' ) == 'true' );
+			 $this->post_id = Session::postId();
+
+			 parent::__construct($name, $label, $props );
+			 
+		}
+
+		/**
 		 * Build the html
 		 *
 		 * @return String;
@@ -28,8 +54,8 @@
 		public function build(){
 
 		    $posts = $this->getValue();
-
-		    $html = '<div class="post-search-field" data-highest-id="'.$this->getHighestItemId().'">';
+		    
+		    $html = '<div class="post-search-field" data-highest-id="'.$this->getHighestItemId().'" data-post_id="'.$this->post_id.'">';
 
 		    $html .= '<div class="not-selected-wrapper">';
 		    	$html .= '<div class="search-bar">';
@@ -55,9 +81,8 @@
 		    	if( !empty( $posts ) ){
 		    	foreach( $posts as $p ){
 
-		    		$html .= $this->makeItem( $p, $i );
+		    		$html .= $this->makeItem( $p );
 
-		    		$i++;
 		    	}}
 
 		    	$html .= '</ul>';
@@ -129,6 +154,43 @@
 		    return count( $posts );
 
 		}
+
+
+
+		/**
+	     * Get the value of this field:
+	     * 
+	     * @return String
+	     */
+	    public function getValue(){
+
+	        $value = $val = false;
+
+            $values = DB::get( $this->post_id, $this->bidirectional );
+            //$value = get_post_meta( $post->ID, $this->name, true );
+            
+            if( isset( $values ) && count( $values ) > 0 ) {
+            	$value = array();
+            	foreach ($values as $relatedPost) {
+            		if ( $this->bidirectional ) {
+            			if ( $relatedPost->related_post_id == $this->post_id )
+            				array_push($value, unserialize($relatedPost->post_data));	
+            		}
+            		if ( $relatedPost->post_id == $this->post_id )
+            			array_push($value, unserialize($relatedPost->related_post_data));	
+            		
+            	}
+            }
+
+
+	        if( $value && !$val )
+	            $val = $value;
+
+	        if( $this->properties['defaultValue'] && !$val )
+	            $val = $this->getDefault();
+
+	        return $val;
+	    }
 
 
 

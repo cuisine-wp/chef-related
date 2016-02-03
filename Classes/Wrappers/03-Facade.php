@@ -56,6 +56,7 @@
             $aliases = array(
 
                 'walker'             => 'ChefRelated\Front\Walker',
+                'relatedmetabox'           => 'ChefRelated\Builders\RelatedMetaboxBuilder'
 
             );
     

@@ -2,7 +2,7 @@
 
 	namespace ChefRelated\Admin;
 
-	use \Cuisine\Wrappers\Metabox;
+	use \ChefRelated\Wrappers\RelatedMetabox;
 	use \Cuisine\Wrappers\Field;
 	use \ChefRelated\Wrappers\StaticInstance;
 
@@ -29,7 +29,7 @@
 			add_action( 'admin_init', function(){
 
 				$fields = $this->getFields();
-				Metabox::make( 'Gerelateerd', 'post' )->set( $fields );
+				RelatedMetabox::make( 'Gerelateerd', 'post' )->set( $fields );
 
 			});
 		}

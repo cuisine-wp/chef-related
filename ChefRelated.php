@@ -72,8 +72,10 @@ if (!class_exists('ChefRelatedIgniter')) {
             $includes = array( 
                 'Classes/Wrappers',      //facades
                 'Classes/Hooks',
-                'Classes/Admin',
-                'Classes/Front'
+                'Classes/Builders',
+                'Classes/Database',
+                'Classes/Front',
+                'Classes/Admin'
             );
 
             foreach( $includes as $inc ){

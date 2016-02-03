@@ -191,8 +191,11 @@ var PostSearch = Backbone.View.extend({
 
 		var self = this;
 		var data = {
-			'action' 		: 'fetchPostList'
+			'action' 		: 'fetchPostList',
+			'post_id'		: self.$el.data('post_id' )
 		};
+
+		console.log(data);
 
 		jQuery.post( ajaxurl, data, function( response ){
 
