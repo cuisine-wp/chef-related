@@ -52,11 +52,10 @@ class Walker {
 	 * @return string (html)
 	 */
 	public function walk(){
+		
 
 		$default = self::defaultTemplate();
 		$theme = 'blocks/';
-
-
 
 		ob_start();
 		
@@ -105,20 +104,19 @@ class Walker {
 		$_related = array();
 		$relatedPosts = DB::get( $this->postId ,$this->bidirectional );
 		
-        foreach ($values as $relatedPost) {
+        foreach ($relatedPosts as $relatedPost) {
     		if ( $this->bidirectional ) {
-    			if ( $relatedPost->related_post_id == $this->post_id )
+    			if ( $relatedPost->related_post_id == $this->postId )
     				array_push($_related, unserialize($relatedPost->post_data));	
     		}
-    		if ( $relatedPost->post_id == $this->post_id )
+    		if ( $relatedPost->post_id == $this->postId )
     			array_push($_related, unserialize($relatedPost->related_post_data));	
     		
     	}
 		//no related items set:
-		//$_related = get_post_meta( $this->postId, 'related', true );
-		if( !$_related )
+		if (!$_related)
 			return false;
-		//cuisine_dump($_related);
+
 		return $_related;
 	}
 
@@ -143,8 +141,9 @@ class Walker {
 			if( !$_related ) {
 
 				if ( Settings::get( 'autoSupplementRelated' ) == 'true' ) {
-
-					return $this->getRelatedPosts( array( $this->postId ), Settings::get( 'numberOfPosts' ) );
+					$result = $this->getRelatedPosts( array( $this->postId ), Settings::get( 'numberOfPosts' ) );
+					//cuisine_dump($result);
+					return $result;
 
 				} else {
 
@@ -155,7 +154,6 @@ class Walker {
 			} else {
 
 				// related items are set, we can go on:
-
 				$_related_ids =  Sort::pluck( $_related, 'id' );
 
 
@@ -227,14 +225,23 @@ class Walker {
 
 		// get the terms query
 		$taxQuery = $this->getTaxQuery();
-
-		// get posts with same category
-		return new WP_Query( array( 
-			'posts_per_page' => $numberOfPosts,
-			'post__not_in'=> $excluded_posts,
-			'tax_query' => $taxQuery
-		));
+		if (!empty ( $taxQuery )) {
+			// get posts with same category
+			return new WP_Query( array( 
+				'posts_per_page' => $numberOfPosts,
+				'post__not_in'=> $excluded_posts,
+				'tax_query' => $taxQuery
+			));
+		}else {
+			// if no taxquery found, try to get posts of same posttype
+			return new WP_Query( array( 
+				'posts_per_page' => $numberOfPosts,
+				'post__not_in'=> $excluded_posts,
+				'post_type' => get_post_type ( $this->postId )
+			));
+		}
 	}
+	
 
 
 
@@ -251,6 +258,7 @@ class Walker {
 		if( empty($taxonomies) ) {
 			Logger::message( 'no taxonomies found for relating posts' );
 			return array();
+
 		} else {
 
 			// get all the post terms with the used taxonomies
