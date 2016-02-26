@@ -5,6 +5,7 @@
 	use \ChefRelated\Wrappers\RelatedMetabox;
 	use \Cuisine\Wrappers\Field;
 	use \ChefRelated\Wrappers\StaticInstance;
+	use \ChefRelated\Front\Settings;
 
 	class MetaboxListeners extends StaticInstance{
 
@@ -29,7 +30,7 @@
 			add_action( 'admin_init', function(){
 
 				$fields = $this->getFields();
-				$postTypes = apply_filters( 'chef_related_post_types', array( 'post' ) );
+				$postTypes = Settings::relatedPostTypes();
 
 				foreach( $postTypes as $pt ){
 

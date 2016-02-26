@@ -4,6 +4,7 @@
 
 	use \Cuisine\Wrappers\PostType;
 	use \ChefRelated\Wrappers\AjaxInstance;
+	use \ChefRelated\Front\Settings;
 	use \WP_Query;
 
 	class Ajax extends AjaxInstance{
@@ -35,7 +36,7 @@
 
 				if( !isset( $relatedPostList ) ){
 					
-					$post_types = apply_filters( 'chef_related_post_types', array( 'post' ) );
+					$post_types = Settings::relatedPostTypes();
 					$query = new WP_Query( 
 						array( 
 							'post_type' => $post_types, 

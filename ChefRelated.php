@@ -3,7 +3,7 @@
  * Plugin Name: Chef Related
  * Plugin URI: http://chefduweb.nl/cuisine
  * Description: Adds related posts
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Remy Bakker & Luc Princen
  * Author URI: http://www.chefduweb.nl/
  * License: GPLv2

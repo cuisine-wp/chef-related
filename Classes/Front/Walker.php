@@ -17,12 +17,35 @@ use WP_Query;
  */
 class Walker {
 
-
+	/**
+	 * Current Post Id 
+	 * 
+	 * @var Int
+	 */
 	var $postId;
 
+	/**
+	 * Query
+	 * 
+	 * @var WP_Query
+	 */
 	var $query;
 
+	/**
+	 * Relate bidirectionally 
+	 * 
+	 * @var bool
+	 */
 	var $bidirectional;
+
+	/**
+	 * Post types to relate to
+	 * 
+	 * @var array
+	 */
+	var $post_types;
+
+
 
 	/**
 	 * Set the postId for this Walker
@@ -32,6 +55,7 @@ class Walker {
 		global $post;
 
 		$this->bidirectional = (Settings::get( 'autoRelateBidirectional' ) == 'true' );
+		$this->post_types = Settings::relatedPostTypes();
 
 		if( !isset( $post ) )
 			return false;
@@ -162,7 +186,7 @@ class Walker {
 		
 					'post__in' => $_related_ids,
 					'posts_per_page' => count( $_related_ids ),
-		
+					'post_type' => $this->post_types
 				);
 		
 				// get the query result
@@ -230,7 +254,8 @@ class Walker {
 			return new WP_Query( array( 
 				'posts_per_page' => $numberOfPosts,
 				'post__not_in'=> $excluded_posts,
-				'tax_query' => $taxQuery
+				'tax_query' => $taxQuery,
+				'post_type' => $this->post_types
 			));
 		}else {
 			// if no taxquery found, try to get posts of same posttype

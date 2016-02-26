@@ -44,6 +44,17 @@
 
 		}
 
+
+		/**
+		 * Return all post types that can relate to eachother
+		 * 
+		 * @return array
+		 */
+		public static function relatedPostTypes(){
+			return apply_filters( 'chef_related_post_types', array( 'post' ) );
+		}
+		
+
 		/**
 		 * Get the settings as a string (for logging purposses)
 		 * 
