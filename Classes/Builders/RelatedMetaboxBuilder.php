@@ -11,6 +11,9 @@ use Cuisine\Utilities\Logger;
 
 class RelatedMetaboxBuilder Extends MetaboxBuilder{
 
+
+	var $check = true;
+
 	/**
 	 * The wrapper install method. Save container values.
 	 *
@@ -56,7 +59,7 @@ class RelatedMetaboxBuilder Extends MetaboxBuilder{
 	    	DB::delete( $postId, $bidirectional );
 
 			// check if a related post is set
-	    	if( $_POST['related'] ) {
+	    	if( isset( $_POST['related'] ) ) {
 
 	    		// set related posts array
 	    		$relatedPosts = $_POST['related'];
