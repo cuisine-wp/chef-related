@@ -79,11 +79,18 @@
 		    	$i = 0;
 
 		    	if( !empty( $posts ) ){
-		    	foreach( $posts as $p ){
 
-		    		$html .= $this->makeItem( $p );
+		    		$shown = array();
 
-		    	}}
+		    		foreach( $posts as $p ){
+		    			
+		    			if( get_post_status( $p['id'] ) == 'publish' && !in_array( $p['id'], $shown ) ){
+		    				$html .= $this->makeItem( $p );
+		    				$shown[] = $p['id'];
+		    			}
+	
+		    		}
+		    	}
 
 		    	$html .= '</ul>';
 
@@ -106,11 +113,11 @@
 
 			$html = '';
 			$html .= '<li data-id="'.$item['id'].'">';
-				$html .= '<b>'.$item['title'].'</b>';
+				$html .= '<b>'.str_replace( "\\",'', $item['title'] ).'</b>';
 				$html .= '<span class="type">'.$item['type'].'</span>';
 
 				$html .= $prefix.'[id]" value="'.$item['id'].'" disabled>';
-				$html .= $prefix.'[title]" value="'.$item['title'].'" disabled>';
+				$html .= $prefix.'[title]" value="'.str_replace( "\\",'', $item['title'] ).'" disabled>';
 				$html .= $prefix.'[type]" value="'.$item['type'].'" disabled>';
 				$html .= $prefix.'[position]" value="'.$item['position'].'" id="position" disabled>';
 
@@ -174,11 +181,12 @@
             	foreach ($values as $relatedPost) {
             		if ( $this->bidirectional ) {
             			if ( $relatedPost->related_post_id == $this->post_id )
-            				array_push($value, unserialize($relatedPost->post_data));	
+							array_push($value, unserialize($relatedPost->post_data));
+            		
             		}
             		if ( $relatedPost->post_id == $this->post_id )
             			array_push($value, unserialize($relatedPost->related_post_data));	
-            		
+
             	}
             }
 

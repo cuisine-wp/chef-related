@@ -1,0 +1,3 @@
+### 1.3.0: 	2016-02-26
+
+* First public release

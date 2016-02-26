@@ -30,19 +30,26 @@
 				$this->setPostGlobal();
 
 				//query caching
-				global $postList;
+				global $relatedPostList;
 				global $post;
 
-				if( !isset( $postList ) ){
+				if( !isset( $relatedPostList ) ){
 					
-					$post_types = PostType::get();
-					$query = new WP_Query( array( 'post_types' => $post_types, 'posts_per_page' => 	-1 , 'post__not_in'=> array($post->ID) ) );
+					$post_types = apply_filters( 'chef_related_post_types', array( 'post' ) );
+					$query = new WP_Query( 
+						array( 
+							'post_type' => $post_types, 
+							'posts_per_page' => -1, 
+							'post__not_in'=> array( $post->ID ),
+							'post_status' => 'publish'
+						)
+					);
 	
-					$GLOBALS['postList'] = $query->posts;
+					$GLOBALS['relatedPostList'] = $query->posts;
 					$return = $query->posts;				
 				
 				}else{
-					$return = $postList;
+					$return = $relatedPostList;
 				
 				}
 

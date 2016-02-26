@@ -3,8 +3,8 @@
  * Plugin Name: Chef Related
  * Plugin URI: http://chefduweb.nl/cuisine
  * Description: Adds related posts
- * Version: 1.2
- * Author: Luc Princen
+ * Version: 1.3.0
+ * Author: Remy Bakker & Luc Princen
  * Author URI: http://www.chefduweb.nl/
  * License: GPLv2
  * 
@@ -36,12 +36,6 @@ if (!class_exists('ChefRelatedIgniter')) {
          */
         private static $instance = null;
 
-        /**
-         * Plugin version.
-         *
-         * @var float
-         */
-        const VERSION = '1.0';
 
 
         /**

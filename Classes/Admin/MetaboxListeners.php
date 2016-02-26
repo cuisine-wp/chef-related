@@ -29,7 +29,13 @@
 			add_action( 'admin_init', function(){
 
 				$fields = $this->getFields();
-				RelatedMetabox::make( 'Gerelateerd', 'post' )->set( $fields );
+				$postTypes = apply_filters( 'chef_related_post_types', array( 'post' ) );
+
+				foreach( $postTypes as $pt ){
+
+					RelatedMetabox::make( 'Gerelateerd', $pt )->set( $fields );
+
+				}
 
 			});
 		}

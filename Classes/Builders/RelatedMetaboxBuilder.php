@@ -12,8 +12,6 @@ use Cuisine\Utilities\Logger;
 class RelatedMetaboxBuilder Extends MetaboxBuilder{
 
 
-	var $check = true;
-
 	/**
 	 * The wrapper install method. Save container values.
 	 *
