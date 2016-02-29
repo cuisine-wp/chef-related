@@ -1,20 +1,20 @@
 {
-  "name": "chefduweb/crouton",
-  "description": "Crouton is a starter-plugin vor Cuisine",
-  "keywords": ["wordpress", "plugin", "canvas", "starter"],
-  "homepage": "http://www.chefduweb.nl/cuisine",
+  "name": "chefduweb/chef-related",
+  "description": "Easily create post-relations ",
+  "keywords": ["wordpress", "plugin", "post relations", "related"],
+  "homepage": "http://www.chefduweb.nl/plugins/chef-related",
   "license": "GPLv3",
   "authors": [
-    {
-      "name": "Luc Princen",
-      "email": "luc@chefduweb.nl",
-      "homepage": "http://www.chefduweb.nl"
-    },
     {
       "name": "Remy Bakker",
       "email": "remy@chefduweb.nl",
       "homepage": "http://www.chefduweb.nl"
     },
+    {
+      "name": "Luc Princen",
+      "email": "luc@chefduweb.nl",
+      "homepage": "http://www.chefduweb.nl"
+    }
   ],
   "type": "wordpress-plugin",
   "require": {
