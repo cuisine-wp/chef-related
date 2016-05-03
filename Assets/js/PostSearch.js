@@ -111,7 +111,8 @@ var PostSearch = Backbone.View.extend({
 
 
 			if( self.selectedItems.indexOf( item.ID ) === -1 ){
-				template += _.template( html, datas );
+				var _temp = _.template( html );
+				template += _temp( datas );
 			}
 		}
 
