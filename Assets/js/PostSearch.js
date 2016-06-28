@@ -213,11 +213,12 @@ var PostSearch = Backbone.View.extend({
 
 
 jQuery( document ).ready( function( $ ){
-
 	setPostSearch();
-
 });
 
+jQuery( document ).on( 'refreshFields', function(){
+	setPostSearch();
+});
 
 function setPostSearch(){
 
